@@ -1,21 +1,42 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <ElectionTable :tableRows="tableRows" :summary="summary" />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import ElectionTable from "./components/ElectionTable";
+import formatData from "./utils/formatData";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    ElectionTable,
+  },
+  data() {
+    return {
+      tableRows: [],
+      summary: {},
+    };
+  },
+  mounted: function () {
+    fetch("/us-pres-by-town.json", {
+      method: "get",
+    })
+      .then((res) => res.json())
+      .then((jsonData) => {
+        var { tableRows, summary } = formatData(jsonData);
+        this.tableRows = tableRows;
+        this.summary = summary;
+      });
+  },
+};
 </script>
+{
 
+
+
+}
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -23,6 +44,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin: 60px;
 }
 </style>
